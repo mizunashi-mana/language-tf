@@ -1,0 +1,89 @@
+name: language-tf
+version: '0.1.0.0'
+author: Mizunashi Mana
+maintainer: mizunashi-mana@noreply.git
+copyright: 2018 Mizunashi Mana
+license: MIT
+
+custom-setup:
+  dependencies:
+  - base
+  - Cabal >= 2.0
+  - cabal-doctest
+
+ghc-options:
+  # warnings
+  - -Wall
+  - -Wcompat
+  - -Wincomplete-uni-patterns
+  - -Wincomplete-record-updates
+  - -Wredundant-constraints
+
+  # more print
+  - -fprint-explicit-foralls
+  #- -fprint-explicit-kinds
+  - -fprint-potential-instances
+
+  # lint
+  - -dcore-lint
+
+dependencies:
+  - base >=4.7 && <5
+  - trifecta
+  - parsers
+  - unordered-containers
+  - constraints
+  - extensible
+  - prettyprinter
+
+library:
+  source-dirs: src
+
+executables:
+  language-tf:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    ghc-prof-options:
+    - "\"-with-rtsopts=-N -xc\""
+    dependencies:
+      - language-tf
+
+tests:
+  lint:
+    main: Lint.hs
+    source-dirs: test
+    other-modules: []
+    ghc-options:
+    - -threaded
+    - -with-rtsopts=-N
+    dependencies:
+    - hlint
+
+  doctest:
+    main: Doctest.hs
+    source-dirs: test
+    other-modules:
+    - Build_doctests
+    ghc-options:
+    - -threaded
+    - -with-rtsopts=-N
+    dependencies:
+    - doctest
+    - QuickCheck
+    - template-haskell
+
+  spec:
+    main: Driver.hs
+    source-dirs: test/spec
+    ghc-options:
+    - -threaded
+    - -with-rtsopts=-N
+    dependencies:
+    - hspec
+    - hspec-discover
+    - QuickCheck
+    - language-tf
